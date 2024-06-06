@@ -13,9 +13,15 @@ class CreatePostForm(FlaskForm):
     has_sockets = RadioField("Plug Sockets", choices = ['Yes', 'No'])
     has_toilet = RadioField("Toilet", choices = ['Yes', 'No'])
     has_wifi = RadioField("WiFi", choices = ['Yes', 'No'])
-    can_take_calls = RadioField("Landline", choices = ['Yes', 'No'])
+    # can_take_calls = RadioField("Landline", choices = ['Yes', 'No'])
     seats = SelectField("Seats", choices = ['0-10', '11-20', '21-30', '31-40', '41-50', '50+'])
     coffee_price = StringField("Coffe Price", validators=[DataRequired()])
+    opening_hours = StringField("Opening Hours", validators=[DataRequired()])
+    # date = StringField("Date of Post", validators=[DataRequired()])
+    review_para_1 = CKEditorField("Paragraph 1", validators=[DataRequired()])
+    review_img_1 = StringField("Image 1", validators=[DataRequired()])
+    review_para_2 = CKEditorField("Paragraph 1", validators=[DataRequired()])
+    review_img_2 = StringField("Image 2", validators=[DataRequired()])
     submit = SubmitField("Submit Post")
 
 # Create a form to register new users

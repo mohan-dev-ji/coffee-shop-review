@@ -21,6 +21,11 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         {{ post.body|safe }}
+        <h3>Reviewed on {{  post.date  }}</h3>          
+          {{ post.review_para_1|safe }}
+          <img src="{{  post.review_img_1  }}" class="img" alt="Review Image 1"/>
+          {{ post.review_para_2|safe }}
+          <img src="{{  post.review_img_2  }}" class="img mb-5" alt="Review Image 2"/>         
         <h2>Location</h2>
         <div class="map-container">
           <iframe
@@ -43,9 +48,6 @@
         </ul>
         <ul>
           <b>Wifi:</b> {{ post.has_wifi }}
-        </ul>
-        <ul>
-          <b>Landline:</b> {{ post.can_take_calls }}
         </ul>
         <ul>
           <b>Seats:</b> {{  post.seats  }}
@@ -71,13 +73,33 @@
         </div>
         {% endif %}
         
-        <!-- Comments Area -->
-        <!-- Load the CKEditor -->
-        {{ ckeditor.load() }}
-        <!-- Configure it with the name of the form field from CommentForm -->
-        {{ ckeditor.config(name='comment_text') }}
-        <!-- Create the wtf quick form from CommentForm -->
-        {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        <!-- Button to open the modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#commentModal">
+      Leave a Comment
+  </button>
+
+  <!-- Modal Structure -->
+  <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="commentModalLabel">Leave a Comment</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <!-- Comments Area -->
+                  <!-- Load the CKEditor -->
+                  {{ ckeditor.load() }}
+                  <!-- Configure it with the name of the form field from CommentForm -->
+                  {{ ckeditor.config(name='comment_text') }}
+                  <!-- Create the wtf quick form from CommentForm -->
+                  {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+              </div>
+          </div>
+      </div>
+  </div>
         <div class="comment pt-5">
           <ul class="commentList">
             <!-- Show all comments -->

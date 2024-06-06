@@ -6,7 +6,7 @@ from flask_gravatar import Gravatar
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Text
+from sqlalchemy import Integer, String, Text, func
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
@@ -66,9 +66,16 @@ class Cafe(db.Model):
     has_sockets: Mapped[int] = mapped_column(Integer, nullable=False)
     has_toilet: Mapped[int] = mapped_column(Integer, nullable=False)
     has_wifi: Mapped[int] = mapped_column(Integer, nullable=False)
-    can_take_calls: Mapped[int] = mapped_column(Integer, nullable=False)
+    # can_take_calls: Mapped[int] = mapped_column(Integer, nullable=False)
     seats: Mapped[str] = mapped_column(String(250), nullable=False)
     coffee_price: Mapped[str] = mapped_column(String(250), nullable=False)
+    opening_hours: Mapped[str] = mapped_column(String(250), nullable=False)
+    date: Mapped[str] = mapped_column(String(250), nullable=False)
+    review_para_1: Mapped[str] = mapped_column(Text(500), nullable=False)
+    review_img_1: Mapped[str] = mapped_column(Text(500), nullable=False)
+    review_para_2: Mapped[str] = mapped_column(Text(500), nullable=False)
+    review_img_2: Mapped[str] = mapped_column(Text(500), nullable=False)
+    
     # Parent relationship to the comments
     comments = relationship("Comment", back_populates="parent_post")
     
@@ -224,10 +231,15 @@ def add_new_post():
             has_sockets=form.has_sockets.data,
             has_toilet=form.has_toilet.data,
             has_wifi=form.has_wifi.data,
-            can_take_calls=form.can_take_calls.data,
+            # can_take_calls=form.can_take_calls.data,
             seats=form.seats.data,
             coffee_price=form.coffee_price.data,
-            # date=date.today().strftime("%B %d, %Y")
+            opening_hours=form.opening_hours.data,
+            date=date.today().strftime("%B %d, %Y"),
+            review_para_1=form.review_para_1.data,
+            review_img_1=form.review_img_1.data,
+            review_para_2=form.review_para_2.data,
+            review_img_2=form.review_img_2.data,
         )
         db.session.add(new_post)
         db.session.commit()
@@ -247,9 +259,15 @@ def edit_post(post_id):
         has_sockets=post.has_sockets,
         has_toilet=post.has_toilet,
         has_wifi=post.has_wifi,
-        can_take_calls=post.can_take_calls,
+        # can_take_calls=post.can_take_calls,
         seats=post.seats,
         coffee_price=post.coffee_price,
+        opening_hours=post.opening_hours,
+        # date=date.today().strftime("%B %d, %Y"),
+        review_para_1=post.review_para_1,
+        review_img_1=post.review_img_1,
+        review_para_2=post.review_para_2,
+        review_img_2=post.review_img_2,
     )
     if edit_form.validate_on_submit():
         post.name = edit_form.name.data
@@ -259,9 +277,15 @@ def edit_post(post_id):
         post.has_sockets = edit_form.has_sockets.data
         post.has_toilet = edit_form.has_toilet.data
         post.has_wifi = edit_form.has_wifi.data
-        post.can_take_calls = edit_form.can_take_calls.data
+        # post.can_take_calls = edit_form.can_take_calls.data
         post.seats = edit_form.seats.data
         post.coffee_price = edit_form.coffee_price.data
+        post.opening_hours = edit_form.opening_hours.data
+        post.date=date.today().strftime("%B %d, %Y")
+        post.review_para_1 = edit_form.review_para_1.data
+        post.review_img_1 = edit_form.review_img_1.data
+        post.review_para_2 = edit_form.review_para_2.data
+        post.review_img_2 = edit_form.review_img_2.data
         db.session.commit()
         return redirect(url_for("show_post", post_id=post.id))
     return render_template("make-post.html", form=edit_form, is_edit=True)
