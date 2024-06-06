@@ -20,7 +20,7 @@ class CreatePostForm(FlaskForm):
     # date = StringField("Date of Post", validators=[DataRequired()])
     review_para_1 = CKEditorField("Paragraph 1", validators=[DataRequired()])
     review_img_1 = StringField("Image 1", validators=[DataRequired()])
-    review_para_2 = CKEditorField("Paragraph 1", validators=[DataRequired()])
+    review_para_2 = CKEditorField("Paragraph 2", validators=[DataRequired()])
     review_img_2 = StringField("Image 2", validators=[DataRequired()])
     submit = SubmitField("Submit Post")
 

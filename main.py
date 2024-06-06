@@ -17,6 +17,8 @@ from dotenv import load_dotenv
 import os
 import smtplib
 
+
+
 # Load environment variables from .env file
 dotenv_path = '../.env'
 load_dotenv(dotenv_path)
@@ -191,8 +193,17 @@ def logout():
 
 @app.route('/')
 def get_all_posts():
-    result = db.session.execute(db.select(Cafe))
-    posts = result.scalars().all()
+    # Join Cafe with Comment and calculate the average rating
+    result = db.session.query(
+        Cafe,
+        func.avg(Comment.rating).label('average_rating')
+    ).outerjoin(Comment, Cafe.id == Comment.post_id
+    ).group_by(Cafe.id
+    ).order_by(func.avg(Comment.rating).desc()
+    ).all()
+
+    posts = [cafe for cafe, _ in result]  # Extract only Cafe objects
+
     return render_template("index.html", all_posts=posts)
 
 
@@ -298,6 +309,17 @@ def delete_post(post_id):
     db.session.commit()
     return redirect(url_for('get_all_posts'))
 
+@app.route('/delete_comment/<int:comment_id>/<int:post_id>', methods=['POST'])
+def delete_comment(comment_id, post_id):
+    if current_user.id != 1:
+        flash("You don't have permission to delete this comment.")
+        return redirect(url_for('get_all_posts'))
+    
+    comment = Comment.query.get_or_404(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash("Comment deleted successfully.")
+    return redirect(url_for('show_post',post_id=post_id))
 
 # Code from previous day
 @app.route("/about")
